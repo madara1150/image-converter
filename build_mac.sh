@@ -25,3 +25,4 @@ pyinstaller --noconfirm --clean --windowed --onedir --noupx \
 # ad-hoc sign (ฟรี) ถ้ามี Developer ID ให้ตั้งค่า SIGN_ID แล้วรันใหม่
 codesign --force --deep --sign "${SIGN_ID:--}" dist/ImageConverter.app
 echo "เสร็จแล้ว: dist/ImageConverter.app"
+./make_dmg.sh

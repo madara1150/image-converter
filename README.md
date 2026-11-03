@@ -24,16 +24,18 @@
 
 <div align="center">
 
-[![Download for Windows](https://img.shields.io/badge/Download-Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/madara1150/image-converter/releases/latest/download/ImageConverter-Windows.zip)
-[![Download for macOS (Apple Silicon)](https://img.shields.io/badge/Download-macOS%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/madara1150/image-converter/releases/latest/download/ImageConverter-macOS-AppleSilicon.zip)
-[![Download for macOS (Intel)](https://img.shields.io/badge/Download-macOS%20Intel-555555?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/madara1150/image-converter/releases/latest/download/ImageConverter-macOS-Intel.zip)
+[![Download for Windows](https://img.shields.io/badge/Download-Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/madara1150/image-converter/releases/latest/download/ImageConverter-Setup-Windows.exe)
+[![Download for macOS (Apple Silicon)](https://img.shields.io/badge/Download-macOS%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/madara1150/image-converter/releases/latest/download/ImageConverter-macOS-AppleSilicon.dmg)
+[![Download for macOS (Intel)](https://img.shields.io/badge/Download-macOS%20Intel-555555?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/madara1150/image-converter/releases/latest/download/ImageConverter-macOS-Intel.dmg)
+
+<sub>Prefer no install? Get the [portable version (zip)](https://github.com/madara1150/image-converter/releases/latest/download/ImageConverter-Windows-Portable.zip) for Windows.</sub>
 
 </div>
 
-| System | How to open |
+| System | How to install |
 |---|---|
-| **Windows** | Unzip, open the `ImageConverter` folder, run `ImageConverter.exe`. Keep the whole folder together. |
-| **macOS** | Unzip and move `ImageConverter.app` to Applications. On first launch, if macOS blocks it, go to **System Settings → Privacy & Security → Open Anyway**. |
+| **Windows** | Run `ImageConverter-Setup-Windows.exe` and click Next until it finishes. The app appears in the Start Menu (an optional desktop shortcut is offered). If you see the blue "Windows protected your PC" screen, click **More info → Run anyway**. Uninstall from Settings → Apps. |
+| **macOS** | Open the `.dmg` and drag **ImageConverter** into the **Applications** folder. If macOS blocks it on first launch, go to **System Settings → Privacy & Security → Open Anyway**. |
 
 > Not sure which Mac you have?  → About This Mac. "Apple M1/M2/M3/M4…" = Apple Silicon, "Intel" = Intel.
 
@@ -70,8 +72,8 @@ python image_converter.py ./pictures --to webp --out ./output
 
 | System | Command | Output |
 |---|---|---|
-| Windows | double-click `build_windows.bat` | `dist\ImageConverter\ImageConverter.exe` |
-| macOS | `./build_mac.sh` (needs Python with Tk 8.6+, e.g. `brew install python python-tk`) | `dist/ImageConverter.app` |
+| Windows | double-click `build_windows.bat` (installer needs [Inno Setup 6](https://jrsoftware.org/isdl.php)) | `Output\ImageConverter-Setup-Windows.exe` |
+| macOS | `./build_mac.sh` (needs Python with Tk 8.6+, e.g. `brew install python python-tk`) | `dist/ImageConverter.dmg` |
 
 Releases are built automatically by GitHub Actions when a `v*` tag is pushed.
 

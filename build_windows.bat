@@ -16,6 +16,15 @@ pyinstaller --noconfirm --clean --windowed --onedir --noupx ^
   --version-file version_info.txt ^
   image_converter.py
 
+REM Build the installer if Inno Setup 6 is installed (https://jrsoftware.org/isdl.php)
+set ISCC="%ProgramFiles(x86)%\Inno Setup 6\ISCC.exe"
+if exist %ISCC% (
+  %ISCC% installer.iss
+  echo Installer: Output\ImageConverter-Setup-Windows.exe
+) else (
+  echo Inno Setup not found, skipping installer.
+)
+
 echo.
 echo Done: dist\ImageConverter\ImageConverter.exe
 echo If you have a code signing certificate, sign it with signtool (see README).

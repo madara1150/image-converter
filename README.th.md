@@ -21,16 +21,18 @@
 
 <div align="center">
 
-[![ดาวน์โหลดสำหรับ Windows](https://img.shields.io/badge/Download-Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/madara1150/image-converter/releases/latest/download/ImageConverter-Windows.zip)
-[![ดาวน์โหลดสำหรับ macOS (Apple Silicon)](https://img.shields.io/badge/Download-macOS%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/madara1150/image-converter/releases/latest/download/ImageConverter-macOS-AppleSilicon.zip)
-[![ดาวน์โหลดสำหรับ macOS (Intel)](https://img.shields.io/badge/Download-macOS%20Intel-555555?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/madara1150/image-converter/releases/latest/download/ImageConverter-macOS-Intel.zip)
+[![ดาวน์โหลดสำหรับ Windows](https://img.shields.io/badge/Download-Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/madara1150/image-converter/releases/latest/download/ImageConverter-Setup-Windows.exe)
+[![ดาวน์โหลดสำหรับ macOS (Apple Silicon)](https://img.shields.io/badge/Download-macOS%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/madara1150/image-converter/releases/latest/download/ImageConverter-macOS-AppleSilicon.dmg)
+[![ดาวน์โหลดสำหรับ macOS (Intel)](https://img.shields.io/badge/Download-macOS%20Intel-555555?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/madara1150/image-converter/releases/latest/download/ImageConverter-macOS-Intel.dmg)
+
+<sub>ไม่อยากติดตั้ง? โหลด [เวอร์ชันพกพา (zip)](https://github.com/madara1150/image-converter/releases/latest/download/ImageConverter-Windows-Portable.zip) สำหรับ Windows</sub>
 
 </div>
 
-| ระบบ | วิธีเปิด |
+| ระบบ | วิธีติดตั้ง |
 |---|---|
-| **Windows** | แตกไฟล์ zip เปิดโฟลเดอร์ `ImageConverter` แล้วดับเบิลคลิก `ImageConverter.exe` (ห้ามแยกไฟล์ .exe ออกจากโฟลเดอร์) |
-| **macOS** | แตกไฟล์ zip แล้วลาก `ImageConverter.app` ไปไว้ใน Applications ถ้าเปิดครั้งแรกแล้ว macOS ไม่ยอมให้เปิด ให้ไปที่ **System Settings → Privacy & Security → Open Anyway** |
+| **Windows** | เปิดไฟล์ `ImageConverter-Setup-Windows.exe` แล้วกด Next จนเสร็จ โปรแกรมจะอยู่ใน Start Menu (เลือกสร้าง shortcut บน Desktop ได้) ถ้า Windows ขึ้นหน้าจอสีน้ำเงิน "Windows protected your PC" ให้กด **More info → Run anyway** ถอนการติดตั้งได้ที่ Settings → Apps |
+| **macOS** | เปิดไฟล์ `.dmg` แล้วลาก **ImageConverter** ไปใส่โฟลเดอร์ **Applications** ถ้าเปิดครั้งแรกแล้ว macOS ไม่ยอมให้เปิด ให้ไปที่ **System Settings → Privacy & Security → Open Anyway** |
 
 > ไม่แน่ใจว่า Mac ของคุณเป็นรุ่นไหน? กด  → About This Mac ถ้าขึ้น "Apple M1/M2/M3/M4…" ให้โหลด Apple Silicon ถ้าขึ้น "Intel" ให้โหลด Intel
 
@@ -68,7 +70,7 @@ python image_converter.py ./โฟลเดอร์รูป --to webp --out ./
 | ระบบ | คำสั่ง | ได้ไฟล์ |
 |---|---|---|
 | Windows | ดับเบิลคลิก `build_windows.bat` | `dist\ImageConverter\ImageConverter.exe` |
-| macOS | `./build_mac.sh` (ต้องใช้ Python ที่มี Tk 8.6 ขึ้นไป เช่น `brew install python python-tk`) | `dist/ImageConverter.app` |
+| macOS | `./build_mac.sh` (ต้องใช้ Python ที่มี Tk 8.6 ขึ้นไป เช่น `brew install python python-tk`) | `dist/ImageConverter.dmg` |
 
 ไฟล์ดาวน์โหลดใน Releases สร้างอัตโนมัติด้วย GitHub Actions ทุกครั้งที่ push tag `v*`
 

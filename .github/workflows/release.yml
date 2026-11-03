@@ -8,6 +8,9 @@ on:
 permissions:
   contents: write
 
+env:
+  PYI_FLAGS: --noconfirm --clean --windowed --onedir --noupx --add-data assets:assets --collect-data customtkinter --collect-all tkinterdnd2 --name ImageConverter
+
 jobs:
   build:
     strategy:
@@ -15,11 +18,10 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            asset: ImageConverter-Windows.zip
           - os: macos-latest
-            asset: ImageConverter-macOS-AppleSilicon.zip
+            dmg: ImageConverter-macOS-AppleSilicon.dmg
           - os: macos-15-intel
-            asset: ImageConverter-macOS-Intel.zip
+            dmg: ImageConverter-macOS-Intel.dmg
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -33,24 +35,37 @@ jobs:
 
       - name: Build (Windows)
         if: runner.os == 'Windows'
+        shell: pwsh
         run: |
-          pyinstaller --noconfirm --clean --windowed --onedir --noupx --icon assets/icon.ico --add-data assets:assets --collect-data customtkinter --collect-all tkinterdnd2 --name ImageConverter --version-file version_info.txt image_converter.py
-          Compress-Archive -Path dist\ImageConverter -DestinationPath ${{ matrix.asset }}
+          pyinstaller $env:PYI_FLAGS.Split(' ') --icon assets/icon.ico --version-file version_info.txt image_converter.py
+          if (-not (Get-Command iscc -ErrorAction SilentlyContinue)) {
+            $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6"
+            if (-not (Test-Path "$iscc\ISCC.exe")) { choco install innosetup -y --no-progress }
+            $env:PATH += ";$iscc"
+          }
+          $version = "${{ github.ref_name }}".TrimStart('v')
+          if ($version -notmatch '^\d') { $version = "0.0.0" }
+          iscc /DAppVersion=$version installer.iss
+          Compress-Archive -Path dist\ImageConverter -DestinationPath ImageConverter-Windows-Portable.zip
+          New-Item -ItemType Directory release | Out-Null
+          Move-Item Output\ImageConverter-Setup-Windows.exe release\
+          Move-Item ImageConverter-Windows-Portable.zip release\
 
       - name: Build (macOS)
         if: runner.os == 'macOS'
         run: |
-          pyinstaller --noconfirm --clean --windowed --onedir --noupx --icon assets/icon.png --add-data assets:assets --collect-data customtkinter --collect-all tkinterdnd2 --name ImageConverter --osx-bundle-identifier com.imageconverter.app image_converter.py
+          pyinstaller $PYI_FLAGS --icon assets/icon.png --osx-bundle-identifier com.imageconverter.app image_converter.py
           codesign --force --deep --sign - dist/ImageConverter.app
-          ditto -c -k --keepParent dist/ImageConverter.app ${{ matrix.asset }}
+          mkdir release
+          ./make_dmg.sh release/${{ matrix.dmg }}
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.asset }}
-          path: ${{ matrix.asset }}
+          name: release-${{ matrix.os }}
+          path: release/*
 
       - name: Upload to release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: ${{ matrix.asset }}
+          files: release/*

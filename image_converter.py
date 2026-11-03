@@ -18,7 +18,7 @@ except ImportError:
     pass
 
 APP_NAME = "Image Converter"
-APP_VERSION = "1.0.0"
+APP_VERSION = "1.1.0"
 
 # ชื่อที่แสดง -> (Pillow format, นามสกุลไฟล์)
 FORMATS = {
