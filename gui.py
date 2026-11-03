@@ -139,19 +139,20 @@ class App(_Base):
         return TEXT[self.lang][key].format(**kw)
 
     def _set_icon(self):
+        self.logo = None
         icon = Path(getattr(sys, "_MEIPASS", Path(__file__).parent)) / "assets" / "icon.png"
         if icon.exists():
-            try:
-                from PIL import ImageTk, Image
-                self._icon = ImageTk.PhotoImage(Image.open(icon).resize((128, 128)))
-                self.iconphoto(True, self._icon)
-            except Exception:  # noqa: BLE001
-                pass
+            from PIL import Image, ImageTk
+            img = Image.open(icon)
+            self.logo = ctk.CTkImage(img, size=(40, 40))
+            self._icon = ImageTk.PhotoImage(img.resize((128, 128)))
+            self.iconphoto(True, self._icon)
 
     # ------------------------------------------------------------ layout
 
     def build(self):
         if self.root_frame is not None:
+            self.out_dir.set(self.out_entry.get())
             self.root_frame.destroy()
         root = self.root_frame = ctk.CTkFrame(self, fg_color="transparent")
         root.pack(fill="both", expand=True, padx=24, pady=20)
@@ -161,7 +162,8 @@ class App(_Base):
         header.pack(fill="x")
         titles = ctk.CTkFrame(header, fg_color="transparent")
         titles.pack(side="left")
-        ctk.CTkLabel(titles, text=f"🖼  {APP_NAME}", font=self.font_title).pack(anchor="w")
+        ctk.CTkLabel(titles, text=f"  {APP_NAME}", font=self.font_title, image=self.logo,
+                     compound="left").pack(anchor="w")
         ctk.CTkLabel(titles, text=self.t("subtitle"), font=self.font_body,
                      text_color=MUTED).pack(anchor="w")
         lang = ctk.CTkSegmentedButton(header, values=["TH", "EN"], width=90,
@@ -205,8 +207,12 @@ class App(_Base):
             row=2, column=0, sticky="w", padx=(18, 12), pady=(8, 16))
         orow = ctk.CTkFrame(card, fg_color="transparent")
         orow.grid(row=2, column=1, sticky="we", padx=(0, 18), pady=(8, 16))
-        ctk.CTkEntry(orow, textvariable=self.out_dir, placeholder_text=self.t("same_folder"),
-                     height=34, font=self.font_body).pack(side="left", fill="x", expand=True)
+        # ไม่ใช้ textvariable เพราะจะทำให้ placeholder ไม่แสดง
+        self.out_entry = ctk.CTkEntry(orow, placeholder_text=self.t("same_folder"),
+                                      height=34, font=self.font_body)
+        if self.out_dir.get():
+            self.out_entry.insert(0, self.out_dir.get())
+        self.out_entry.pack(side="left", fill="x", expand=True)
         ctk.CTkButton(orow, text=self.t("browse"), width=90, height=34, command=self.pick_out,
                       fg_color="transparent", border_width=1, border_color=BORDER,
                       text_color=("gray15", "gray90"), hover_color=ROW_HOVER).pack(side="left", padx=(8, 0))
@@ -216,9 +222,8 @@ class App(_Base):
         bottom.pack(fill="x", pady=(16, 0))
         self.progress = ctk.CTkProgressBar(bottom, height=6, progress_color=ACCENT)
         self.progress.set(0)
-        self.progress.pack(fill="x")
-        status_row = ctk.CTkFrame(bottom, fg_color="transparent")
-        status_row.pack(fill="x", pady=(8, 10))
+        status_row = self.status_row = ctk.CTkFrame(bottom, fg_color="transparent", height=28)
+        status_row.pack(fill="x", pady=(0, 10))
         self.status = ctk.CTkLabel(status_row, text="", font=self.font_body, text_color=MUTED)
         self.status.pack(side="left")
         self.open_btn = ctk.CTkButton(status_row, text=self.t("open_folder"), width=110, height=28,
@@ -355,12 +360,15 @@ class App(_Base):
         self.status.configure(text="", text_color=MUTED)
         self.open_btn.pack_forget()
         self.progress.set(0)
+        self.progress.pack_forget()
         self.refresh_controls()
 
     def pick_out(self):
         d = ctk.filedialog.askdirectory()
         if d:
             self.out_dir.set(d)
+            self.out_entry.delete(0, "end")
+            self.out_entry.insert(0, d)
 
     def start(self):
         if not self.files or self.busy:
@@ -368,8 +376,10 @@ class App(_Base):
         self.busy = True
         self.convert_btn.configure(state="disabled")
         self.open_btn.pack_forget()
+        self.progress.set(0)
+        self.progress.pack(fill="x", before=self.status_row, pady=(0, 8))
         items = list(self.files)
-        out = self.out_dir.get().strip() or None
+        out = self.out_entry.get().strip() or None
         self.last_out = Path(out) if out else items[0].parent
         args = (items, self.target.get(), self.quality.get(), out)
         threading.Thread(target=self.worker, args=args, daemon=True).start()

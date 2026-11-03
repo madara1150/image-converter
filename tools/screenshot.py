@@ -34,7 +34,7 @@ ctk.set_appearance_mode(mode)
 app.lang = lang
 app.build()
 app.add_paths(sorted(tmp.iterdir(), key=lambda p: p.name))
-app.geometry("780x680+80+80")
+app.geometry("780x680+40+0")
 
 
 def shot():
